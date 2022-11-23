@@ -1,23 +1,11 @@
-ARG PYTHON_VERSION=3.10-slim-buster
-
-FROM python:${PYTHON_VERSION}
-
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-RUN mkdir -p /app
+FROM python:3.8-slim-buster
 
 WORKDIR /app
 
-COPY requirements.txt /tmp/requirements.txt
+COPY requirements.txt requirements.txt
 
-RUN set -ex && \
-    pip install --upgrade pip && \
-    pip install -r /tmp/requirements.txt && \
-    rm -rf /root/.cache/
+RUN pip3 install -r requirements.txt
 
-COPY . /app/
+COPY . .
 
-EXPOSE 8000
-
-CMD ["gunicorn", "--bind", ":8000", "--workers", "2", "django_project.wsgi"]
+CMD [ "python3", "manage.py", "runserver", "0.0.0.0:8000" ]
